@@ -47,7 +47,7 @@ export class TodosAccess {
         return result.Items as TodoItem[]
     }
 
-    async updateTodo(updatedTodo: any): Promise<TodoItem> {
+    async updateTodo(updatedTodo: any): Promise<void> {
         logger.info(`Update todo: ${updatedTodo.todoId}`)
         await this.docClient.update({
             TableName: this.todosTable,
@@ -55,16 +55,15 @@ export class TodosAccess {
                 todoId: updatedTodo.todoId, 
                 userId: updatedTodo.userId },
             ExpressionAttributeNames: {"#N": "name"},
-            UpdateExpression: "set #N = :name, dueDate = :dueDate, done = :done",
+            UpdateExpression: "set #N = :name, dueDate = :dueDate, done = :done, notes = :notes",
             ExpressionAttributeValues: {
                 ":name": updatedTodo.name,
                 ":dueDate": updatedTodo.dueDate,
                 ":done": updatedTodo.done,
+                ":notes": updatedTodo.notes
             },
             ReturnValues: "UPDATED_NEW"
         }).promise()
-        
-        return updatedTodo
     }
 
     async updateAttachmentUrl(userId:string, todoId:string, uploadUrl:string){

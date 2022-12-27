@@ -75,6 +75,30 @@ functions:
         Action:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}     
+  
+  GetTodoDetail:
+    handler: src/lambda/http/getTodoDetail.handler
+    events:
+      - http:
+          method: get
+          path: todos/{todoId}
+          cors: true
+          authorizer: Auth
+    iamRoleStatements: 
+      - Effect: Allow
+        Action:
+            - xray:PutTelemetryRecords
+            - xray:PutTraceSegments
+        Resource: "*"  
+      - Effect: Allow
+        Action:         
+            - dynamodb:Query
+            - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}
 
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
@@ -105,7 +129,7 @@ functions:
     handler: src/lambda/http/updateTodo.handler
     events:
       - http:
-          method: put
+          method: patch
           path: todos/{todoId}
           cors: true
           reqValidatorName: ValidateBody
@@ -124,6 +148,7 @@ functions:
       Action:
             - dynamodb:GetItem
             - dynamodb:UpdateItem
+            - dynamodb:PutItem
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
   DeleteTodo:

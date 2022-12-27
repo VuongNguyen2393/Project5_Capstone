@@ -17,7 +17,8 @@ export async function createTodo(createRequest: CreateTodoRequest,userIdVal: str
     attachmentUrl: '',
     createdAt: new Date().toISOString(),
     name: createRequest.name,
-    dueDate: createRequest.dueDate
+    dueDate: createRequest.dueDate,
+    notes: createRequest.notes
   })
 }
 
@@ -33,13 +34,15 @@ export async function getTodosForUser(userId: string): Promise<any> {
 
 export async function updateTodo(updateRequest: UpdateTodoRequest, userId: string, todoId: string): Promise<TodoItem> {
   log.info(`Update todo: ${todoId}`)
-  return await todosAccess.updateTodo({
+  await todosAccess.updateTodo({
     userId,
     todoId,
     name: updateRequest.name,
     dueDate: updateRequest.dueDate,
-    done: updateRequest.done
+    done: updateRequest.done,
+    notes: updateRequest.notes
   })
+  return
 }
 
 export async function createAttachmentPresignedUrl(userId: string,todoId: string): Promise<string> {

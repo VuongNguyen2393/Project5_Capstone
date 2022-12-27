@@ -12,6 +12,9 @@
     },
     "done": {
       "type": "boolean"
+    },
+    "notes": {
+      "type": "string"
     }
   },
   "required": [

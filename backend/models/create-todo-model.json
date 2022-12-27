@@ -5,9 +5,12 @@
   "properties": {
     "name": {
       "type": "string",
-      "minLength": 2
+      "minLength": 1
     },
     "dueDate": {
+      "type": "string"
+    },
+    "notes": {
       "type": "string"
     }
   },
